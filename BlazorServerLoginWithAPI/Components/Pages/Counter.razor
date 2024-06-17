@@ -1,0 +1,31 @@
+﻿@page "/counter"
+@using Microsoft.AspNetCore.Components.Authorization
+
+<PageTitle>Counter</PageTitle>
+
+<MudText Typo="Typo.h3" GutterBottom="true">Counter</MudText>
+<MudText Class="mb-4">Current count: @currentCount</MudText>
+<MudButton Color="Color.Primary" Variant="Variant.Filled" @onclick="IncrementCount">Click me</MudButton>
+
+@code {
+
+    [CascadingParameter]
+    public Task<AuthenticationState> authenticationState { get; set; }
+
+
+    [Parameter]
+    public int Age { get; set; }
+
+
+    private int currentCount = 0;
+
+    protected override Task OnInitializedAsync()
+    {
+        return base.OnInitializedAsync();
+    }
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+}

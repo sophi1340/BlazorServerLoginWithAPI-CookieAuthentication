@@ -1,0 +1,92 @@
+﻿@page "/loginpage"
+@layout BaseLayout
+@using BlazorServerLoginWithAPI.Components.Layout
+@using BlazorServerLoginWithAPI.Models.Account
+@using EncryptStringSample
+@using Microsoft.AspNetCore.WebUtilities
+
+@inject HttpClient httpClient
+@inject NavigationManager ng
+
+
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="/login/css/style.css" rel="stylesheet" />
+</head>
+
+    <section class="ftco-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-7 col-lg-5">
+                    <div class="login-wrap p-4 p-md-5">
+                        <div class="icon d-flex align-items-center justify-content-center">
+                            <span class="fa fa-user-o"></span>
+                        </div>
+                        <h3 class="text-center mb-4">Sign In</h3>
+                        <EditForm Model="model" FormName="frmLogin" OnValidSubmit="LoginHandler">
+                            <div class="form-group">
+                                <InputText @bind-Value="model.UserName" class="form-control rounded-left" placeholder="Username" required />
+                            </div>
+                            <div class="form-group d-flex">
+                                <InputText @bind-Value="model.PassWord"  class="form-control rounded-left" placeholder="Password" required />
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="form-control btn btn-primary rounded submit px-3">Login</button>
+                            </div>
+                            <div class="form-group d-md-flex">
+                                <div class="w-50">
+                                    <label class="checkbox-wrap checkbox-primary">
+                                        Remember Me
+                                        <input type="checkbox" checked>
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                                <div class="w-50 text-md-right">
+                                    <a href="#">Forgot Password</a>
+                                </div>
+                            </div>
+                        </EditForm>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    @* <script src="/login/js/bootstrap.min.js"></script> *@
+    <script src="/login/js/jquery.min.js"></script>
+    <script src="/login/js/main.js"></script>
+    <script src="/login/js/popper.js"></script>
+
+
+
+
+
+@code {
+
+
+    [SupplyParameterFromForm]
+    public LoginDTO model { get; set; }
+
+
+
+    protected override void OnInitialized() => model ??= new();
+
+    private async Task LoginHandler()
+    {
+        try
+        {
+            var _username = Encryptor.EncryptV2(model.UserName);
+            var _pass = Encryptor.EncryptV2(model.PassWord);
+            var uri = $"api/account/login?username={_username}&password={_pass}";
+            ng.NavigateTo(uri, true);
+
+        }
+        catch (Exception ex)
+        {
+            // مدیریت خطاها
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
+
+}

@@ -1,0 +1,16 @@
+﻿@inject NavigationManager ng
+
+
+
+@code {
+
+
+    [Parameter]
+    public string RedirectUrl { get; set; }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        ng.NavigateTo(RedirectUrl, true);
+    }
+
+}
